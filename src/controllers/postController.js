@@ -17,6 +17,28 @@ const getAll = async (req, res) => {
   return res.status(200).json(posts);
 };
 
+const getPostById = async (req, res) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  const token = authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  const post = await postService.getPostById(token, id);
+
+  if (!post) {
+    return res.status(404).json({ message: 'Post does not exist' });
+  }
+
+  if (post.message) {
+    return res.status(401).json(post);
+  }
+
+  return res.status(200).json(post);
+};
+
 const createPost = async (req, res) => {
   const { authorization } = req.headers;
   const token = authorization;
@@ -42,6 +64,7 @@ const createPost = async (req, res) => {
 };
 
 module.exports = {
-  createPost,
   getAll,
+  getPostById,
+  createPost,
 };
