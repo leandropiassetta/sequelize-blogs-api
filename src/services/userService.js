@@ -1,7 +1,7 @@
 const { Users } = require('../models');
 const { createToken } = require('../api/auth/jwt');
 
-const createUser = async (displayName, email, password, image) => {
+const createUser = async ({ displayName, email, password, image }) => {
   const user = await Users.findOne({
     where: { email },
   });
