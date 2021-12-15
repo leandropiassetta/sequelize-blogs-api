@@ -1,25 +1,25 @@
 const { Categories } = require('../models');
-const { verifyToken } = require('../api/auth/jwt');
+// const { verifyToken } = require('../api/auth/jwt');
 
-const getAll = async (token) => {
-  try {
-    verifyToken(token);
-    const categories = await Categories.findAll();
-  
-    return categories;
-  } catch (error) {
-    return { message: 'Expired or invalid token' };
-  }
+const getAll = async () => {
+  // try {
+  //   verifyToken(token);
+  // } catch (error) {
+  //   return { message: 'Expired or invalid token' };
+  // }
+  const categories = await Categories.findAll();
+
+  return categories;
 };
 
-const createCategory = async (name, token) => {
-  try {
-    verifyToken(token);
-    const category = await Categories.create({ name });
-    return category;
-  } catch (error) {
-    return { message: 'Expired or invalid token' };
-  }
+const createCategory = async (name) => {
+  // try {
+  //   verifyToken(token);
+  // } catch (error) {
+  //   return { message: 'Expired or invalid token' };
+  // }
+  const category = await Categories.create({ name });
+  return category;
 };
 
 module.exports = {

@@ -1,34 +1,65 @@
 const { BlogPosts, Categories, Users } = require('../models');
 const { verifyToken } = require('../api/auth/jwt');
 
-const getAll = async (token) => {
-  try {
-    verifyToken(token);
-    const posts = await BlogPosts.findAll({
-      include: [
-        { model: Categories, as: 'categories', through: { attributes: [] } },
-        { model: Users, as: 'user' },
-      ],
-    });
-    return posts;
-  } catch (error) {
-    return { message: 'Expired or invalid token' };
-  }
+const getAll = async () => {
+  // try {
+  //   verifyToken(token);
+  // } catch (error) {
+  //   return { message: 'Expired or invalid token' };
+  // }
+
+  const posts = await BlogPosts.findAll({
+    include: [
+      { model: Categories, as: 'categories', through: { attributes: [] } },
+      { model: Users, as: 'user' },
+    ],
+  });
+  return posts;
 };
 
 const getPostById = async (token, id) => {
-  try {
-    verifyToken(token);
-    const post = await BlogPosts.findByPk(id, {
-      include: [
-        { model: Categories, as: 'categories', through: { attributes: [] } },
-        { model: Users, as: 'user' },
-      ],
-    });
-    return post;
-  } catch (error) {
-    return { message: 'Expired or invalid token' };
+  // try {
+  //   verifyToken(token);
+  // } catch (error) {
+  //   return { message: 'Expired or invalid token' };
+  // }
+
+  const post = await BlogPosts.findByPk(id, {
+    include: [
+      { model: Categories, as: 'categories', through: { attributes: [] } },
+      { model: Users, as: 'user' },
+    ],
+  });
+  return post;
+};
+
+const verifyUser = async (id, userId) => {
+  const postUser = await BlogPosts.findOne({ where: { id } });
+
+  if (userId !== postUser.userId) {
+    throw new Error('Unauthorized user');
   }
+};
+
+const updatePost = async (token, id, title, content) => {
+  let userId = '';
+
+  const { id: tokenId } = verifyToken(token);
+  userId = tokenId;
+
+  try {
+    await verifyUser(id, userId);
+  } catch (error) {
+    return error;
+  }
+
+  await BlogPosts.update({ title, content }, { where: { id } });
+
+  return BlogPosts.findByPk(id, {
+    include: [
+      { model: Categories, as: 'categories', through: { attributes: [] } },
+    ],
+  });
 };
 
 const validCategory = async (categoryIds) => {
@@ -42,18 +73,19 @@ const validCategory = async (categoryIds) => {
 };
 
 const createPost = async (title, content, token) => {
-  try {
-    verifyToken(token);
-    const post = await BlogPosts.create({ title, content, userId: 1 });
-    return post;
-  } catch (error) {
-    return { message: 'Expired or invalid token' };
-  }
+  let userId = '';
+
+  const { id } = verifyToken(token);
+  userId = id;
+
+  const post = await BlogPosts.create({ title, content, userId });
+  return post;
 };
 
 module.exports = {
   getAll,
   getPostById,
-  createPost,
+  updatePost,
   validCategory,
+  createPost,
 };

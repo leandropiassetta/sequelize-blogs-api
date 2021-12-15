@@ -1,10 +1,17 @@
 const router = require('express').Router();
-const userControllers = require('../../controllers/userControllers');
+
+const {
+  getUsers,
+  getUserById,
+  createUser,
+} = require('../../controllers/userControllers');
+
 const { validateSchema } = require('../../middlewares/validateSchema');
+const { validateToken } = require('../../middlewares/validateToken');
 const { usersSchema } = require('../../schemas/userSchema');
 
-router.get('/', userControllers.getUsers);
-router.get('/:id', userControllers.getUserById);
-router.post('/', validateSchema(usersSchema), userControllers.createUser);
+router.get('/', validateToken, getUsers);
+router.get('/:id', validateToken, getUserById);
+router.post('/', validateSchema(usersSchema), createUser);
 
 module.exports = router;
