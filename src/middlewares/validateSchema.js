@@ -1,17 +1,13 @@
-const validateUser = (body, schema) => {
-  const isValid = schema.validate(body);
+const validateSchema = (schema) => (req, res, next) => {
+  let error = false;
+  console.log(req.headers);
+  const isValid = schema.validate(req.body);
 
   if (isValid.error) {
+    console.log(isValid.error);
     const detailsMessage = isValid.error.details[0].message;
-
-    return detailsMessage;
+    error = detailsMessage;
   }
-
-  return false;
-};
-
-const validateSchema = (schema) => (req, res, next) => {
-  const error = validateUser(req.body, schema);
 
   if (!error) {
     return next();

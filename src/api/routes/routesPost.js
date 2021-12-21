@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { validateSchema } = require('../../middlewares/validateSchema');
 const { validateToken } = require('../../middlewares/validateToken');
+const { authorizationUser } = require('../../middlewares/authorization');
 const { postSchema } = require('../../schemas/postSchema');
 const { putSchema } = require('../../schemas/putSchema');
 
@@ -11,9 +12,15 @@ const {
   updatePost,
 } = require('../../controllers/postController');
 
+const middlewaresRoutesPut = [
+  validateToken,
+  validateSchema(putSchema),
+  authorizationUser,
+];
+
 router.get('/', validateToken, getAll);
-router.post('/', validateToken, validateSchema(postSchema), createPost);
-router.put('/:id', validateToken, validateSchema(putSchema), updatePost);
 router.get('/:id', validateToken, getPostById);
+router.post('/', validateToken, validateSchema(postSchema), createPost);
+router.put('/:id', middlewaresRoutesPut, updatePost);
 
 module.exports = router;

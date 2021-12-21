@@ -13,11 +13,10 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
   it('Será validado que é possível editar um blogpost com sucesso', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -45,18 +44,17 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
         expect(json.content).toBe('O campeão do ano! editado');
         expect(json.userId).toBe(1);
         expect(json.categories[0].id).toBe(1);
-        expect(json.categories[0].name).toBe("Inovação");
+        expect(json.categories[0].name).toBe('Inovação');
       });
   });
 
   it('Será validado que é não é possível editar as categorias de um blogpost', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -76,7 +74,7 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
       .put(`${url}/post/1`, {
         title: 'Fórmula 1 editado',
         content: 'O campeão do ano! editado',
-        categoryIds: [1, 2]
+        categoryIds: [1, 2],
       })
       .expect('status', 400)
       .then((response) => {
@@ -88,11 +86,10 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
   it('Será validado que não é possível editar um blogpost com outro usuário', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'MichaelSchumacher@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'MichaelSchumacher@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -165,11 +162,10 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
   it('Será validado que não possível editar um blogpost sem o campo `title`', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -199,11 +195,10 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
   it('Será validado que não possível editar um blogpost sem o campo `content`', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -229,5 +224,4 @@ describe('10 - Sua aplicação deve ter o endpoint PUT `/post/:id`', () => {
         expect(json.message).toBe('"content" is required');
       });
   });
-
 });

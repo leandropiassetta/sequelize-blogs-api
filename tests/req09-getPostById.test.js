@@ -3,7 +3,7 @@ const shell = require('shelljs');
 
 const url = 'http://localhost:3000';
 
-describe('9 - Sua aplicação deve ter o endpoint GET `post/:id`', () => {
+describe.only('9 - Sua aplicação deve ter o endpoint GET `post/:id`', () => {
   beforeEach(() => {
     shell.exec('npx sequelize-cli db:drop');
     shell.exec('npx sequelize-cli db:create && npx sequelize-cli db:migrate $');
@@ -13,11 +13,10 @@ describe('9 - Sua aplicação deve ter o endpoint GET `post/:id`', () => {
   it('Será validado que é possível listar um blogpost com sucesso', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;
@@ -47,7 +46,9 @@ describe('9 - Sua aplicação deve ter o endpoint GET `post/:id`', () => {
         expect(result.user.id).toBe(1);
         expect(result.user.displayName).toBe('Lewis Hamilton');
         expect(result.user.email).toBe('lewishamilton@gmail.com');
-        expect(result.user.image).toBe('https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg');
+        expect(result.user.image).toBe(
+          'https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg'
+        );
         expect(result.categories[0].id).toBe(1);
         expect(result.categories[0].name).toBe('Inovação');
       });
@@ -94,11 +95,10 @@ describe('9 - Sua aplicação deve ter o endpoint GET `post/:id`', () => {
   it('Será validado que não é possível listar um blogpost inexistente', async () => {
     let token;
     await frisby
-      .post(`${url}/login`,
-        {
-          email: 'lewishamilton@gmail.com',
-          password: '123456',
-        })
+      .post(`${url}/login`, {
+        email: 'lewishamilton@gmail.com',
+        password: '123456',
+      })
       .expect('status', 200)
       .then((response) => {
         const { body } = response;

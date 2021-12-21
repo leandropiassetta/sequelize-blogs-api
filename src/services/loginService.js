@@ -9,8 +9,8 @@ const loginUser = async (email) => {
   if (!user) {
     return { message: 'Invalid fields' };
   }
-  
-  const token = createToken(email);
+
+  const token = createToken({ id: user.id, email });
 
   return token;
 };
