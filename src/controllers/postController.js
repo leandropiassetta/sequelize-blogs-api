@@ -1,5 +1,20 @@
 const postService = require('../services/postService');
 
+const createPost = async (req, res) => {
+  const userId = req.user.id;
+  const dataPost = req.body;
+
+  const validationOfCategories = await postService.validCategory(dataPost);
+
+  if (validationOfCategories.message) {
+    return res.status(400).json(validationOfCategories);
+  }
+
+  const post = await postService.createPost(dataPost, userId);
+
+  return res.status(201).json(post);
+};
+
 const getAll = async (req, res) => {
   const { authorization } = req.headers;
   const token = authorization;
@@ -36,22 +51,6 @@ const updatePost = async (req, res) => {
   }
 
   return res.status(200).json(post);
-};
-
-const createPost = async (req, res) => {
-  const userId = req.user.id;
-  console.log(req.user);
-  const dataPost = req.body;
-
-  const validationOfCategories = await postService.validCategory(dataPost);
-
-  if (validationOfCategories.message) {
-    return res.status(400).json(validationOfCategories);
-  }
-
-  const post = await postService.createPost(dataPost, userId);
-
-  return res.status(201).json(post);
 };
 
 module.exports = {

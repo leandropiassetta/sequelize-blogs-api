@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const { validateSchema } = require('../../middlewares/validateSchema');
 const { validateToken } = require('../../middlewares/validateToken');
+const { verifyExistCategory } = require('../../middlewares/validatePut');
 const { authorizationUser } = require('../../middlewares/authorization');
+
 const { postSchema } = require('../../schemas/postSchema');
 const { putSchema } = require('../../schemas/putSchema');
 
@@ -14,6 +16,7 @@ const {
 
 const middlewaresRoutesPut = [
   validateToken,
+  verifyExistCategory,
   validateSchema(putSchema),
   authorizationUser,
 ];
