@@ -60,19 +60,7 @@ const updatePost = async (id, { title, content }) => {
   }
 };
 
-// const checkForPost = async (id) => {
-//   console.log('aqui');
-//   try {
-//     console.log('chegando');
-//     await BlogPosts.findOne({ where: { id } });
-//   } catch (error) {
-//     return { message: 'Post does not exist' };
-//   }
-// };
-
 const deletePost = async (id) => {
-  // await checkForPost(id);
-
   await BlogPosts.destroy({ where: { id } });
 };
 
