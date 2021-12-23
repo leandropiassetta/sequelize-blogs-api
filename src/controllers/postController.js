@@ -30,7 +30,6 @@ const getAll = async (req, res) => {
 
 const getPostById = async (req, res) => {
   const { id } = req.params;
-
   const post = await postService.getPostById(id);
 
   if (!post) {
@@ -53,9 +52,18 @@ const updatePost = async (req, res) => {
   return res.status(200).json(post);
 };
 
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  await postService.deletePost(id);
+
+  return res.status(204).end();
+};
+
 module.exports = {
   getAll,
   getPostById,
   updatePost,
   createPost,
+  deletePost,
 };

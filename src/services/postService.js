@@ -4,10 +4,18 @@ const {
   Users /* PostCategory */,
 } = require('../models');
 
+const createPost = async (dataPost, userId) => {
+  console.log(userId);
+  const formatPost = { ...dataPost, userId };
+  const post = await BlogPosts.create(formatPost);
+
+  return post;
+};
+
 const getAll = async () => {
   const posts = await BlogPosts.findAll({
     include: [
-      { model: Users, as: 'users' },
+      { model: Users, as: 'user' },
       { model: Categories, as: 'categories', through: { attributes: [] } },
     ],
   });
@@ -17,7 +25,7 @@ const getAll = async () => {
 const getPostById = async (id) => {
   const post = await BlogPosts.findByPk(id, {
     include: [
-      { model: Users, as: 'users' },
+      { model: Users, as: 'user' },
       { model: Categories, as: 'categories', through: { attributes: [] } },
     ],
   });
@@ -34,23 +42,8 @@ const validCategory = async ({ categoryIds }) => {
   return { message: '"categoryIds" not found' };
 };
 
-const createPost = async (dataPost, userId) => {
-  const formatPost = { ...dataPost, userId };
-  const post = await BlogPosts.create(formatPost);
-
-  return post;
-};
-// const verifyCategoryAndUpdate = async (id, title, content, categoryIds) => {
-//   if (categoryIds) {
-//     await BlogPosts.update({ title, content }, { where: { id: Number(id) } });
-//   } else {
-//     throw new Error('Categories cannot be edited');
-//   }
-// };
-
 const updatePost = async (id, { title, content }) => {
   try {
-    // await verifyCategoryAndUpdate(id, title, content, categoryIds);
     await BlogPosts.update({ title, content }, { where: { id } });
     return BlogPosts.findOne({
       include: [
@@ -67,10 +60,27 @@ const updatePost = async (id, { title, content }) => {
   }
 };
 
+// const checkForPost = async (id) => {
+//   console.log('aqui');
+//   try {
+//     console.log('chegando');
+//     await BlogPosts.findOne({ where: { id } });
+//   } catch (error) {
+//     return { message: 'Post does not exist' };
+//   }
+// };
+
+const deletePost = async (id) => {
+  // await checkForPost(id);
+
+  await BlogPosts.destroy({ where: { id } });
+};
+
 module.exports = {
   getAll,
   getPostById,
   updatePost,
   validCategory,
   createPost,
+  deletePost,
 };
